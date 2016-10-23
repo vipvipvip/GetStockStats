@@ -12,7 +12,9 @@ namespace GetStockStats
     {
         static void Main(string[] args)
         {
-            YQuoteAPI yq = new YQuoteAPI();
+            YQuoteAPI yqAPI = new YQuoteAPI();
+            YahooQuote yq = yqAPI.GetData("AAPL");
+            yqAPI.DumpData(yq);
             Console.ReadKey();
         }
     }

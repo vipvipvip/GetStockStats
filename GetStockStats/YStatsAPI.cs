@@ -2,24 +2,27 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+using System.Collections.Generic;
 
 namespace GetStockStats
 {
-    class YQuoteAPI
+    class YStatsAPI
     {
-        string _baseURL = "http://localhost:3000/stocks/yq/";
+        string _baseURL = "http://localhost:3000/stocks/yqs/";
 
-        public YQuoteAPI()
+        public YStatsAPI()
         {
         }
 
-        public YahooQuote GetData(string ticker)
-        { 
+        public YStats GetData(string ticker)
+        {
             try
             {
                 string locationsRequest = CreateRequest(ticker);
-                Task<YahooQuote> tYQ = MakeRequest(locationsRequest);
-                YahooQuote yq = tYQ.Result;
+                Task<YStats> tYQ = MakeRequest(locationsRequest);
+                YStats yq = tYQ.Result;
 
                 return yq;
             }
@@ -31,10 +34,10 @@ namespace GetStockStats
             }
         }
 
-        public void DumpData(YahooQuote yq)
+        public void DumpData(YStats yq)
         {
             // Optionally Access data as a raw object
-            string yqDes = JsonConvert.SerializeObject(yq.quote);
+            string yqDes = JsonConvert.SerializeObject(yq);
             var jObj = JToken.Parse(yqDes);
             foreach (JProperty property in jObj.Children())
             {
@@ -54,9 +57,10 @@ namespace GetStockStats
             return (UrlRequest);
         }
 
-        private async Task<YahooQuote> MakeRequest(string requestUrl)
+        private async Task<YStats> MakeRequest(string requestUrl)
         {
-            YahooQuote result;
+            YStats result;
+            List<string> errors = new List<string>();
             using (var client = new System.Net.Http.HttpClient())
             {
                 client.BaseAddress = new Uri(requestUrl);
@@ -64,7 +68,17 @@ namespace GetStockStats
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 var response = await client.GetAsync(requestUrl);
                 var data = await response.Content.ReadAsStringAsync();
-                result = JsonConvert.DeserializeObject<YahooQuote>(data);
+                result = JsonConvert.DeserializeObject<YStats>(data,
+                            new JsonSerializerSettings
+                            {
+                                Error = delegate (object sender, ErrorEventArgs args)
+                                {
+                                    Console.WriteLine(args.ErrorContext.Error.Message);
+                                    errors.Add(args.ErrorContext.Error.Message);
+                                    args.ErrorContext.Handled = true;
+                                },
+                                Converters = { new IsoDateTimeConverter() }
+                            });
 
             }
             return result;

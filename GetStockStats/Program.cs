@@ -12,14 +12,33 @@ namespace GetStockStats
     {
         static void Main(string[] args)
         {
+            string ticker = "AAPL";
+            if ( args[0].Length > 0)
+            {
+                ticker = args[0];
+            }
             //YQuoteAPI yqAPI = new YQuoteAPI();
             //YahooQuote yq = yqAPI.GetData("AAPL");
             //yqAPI.DumpData(yq);
 
             YStatsAPI ysAPI = new YStatsAPI();
-            YStats ys = ysAPI.GetData("AAPL");
-            ysAPI.DumpData(ys);
+            YStats ys = ysAPI.GetData(ticker);
+            //ysAPI.DumpData(ys);
+            doCalc(ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw,
+                ys.quoteSummary.result[0].financialData.totalRevenue.raw,
+                ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw);
             Console.ReadKey();
+        }
+
+
+        static void doCalc(long ni, long rev, long shares)
+        {
+            Console.WriteLine("NI: {0}", ni);
+            Console.WriteLine("Revenue: {0}", rev);
+            Console.WriteLine("Shares: {0}", shares);
+
+
+
         }
     }
 }

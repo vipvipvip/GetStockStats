@@ -67,7 +67,8 @@ namespace GetStockStats
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 var response = await client.GetAsync(requestUrl);
-                var data = await response.Content.ReadAsStringAsync();
+                string data = await response.Content.ReadAsStringAsync();
+                //data = data.Replace("\"ytdReturn\": {},\"", "");
                 result = JsonConvert.DeserializeObject<YStats>(data,
                             new JsonSerializerSettings
                             {
@@ -81,6 +82,7 @@ namespace GetStockStats
                             });
 
             }
+            // how to access: result.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw
             return result;
         }
     }

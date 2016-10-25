@@ -436,124 +436,7 @@ namespace GetStockStats
 		public AnnualHoldingsTurnover annualHoldingsTurnover { get; set; }
     }
 
-    [DataContract]
-	public class EarningsDate
-    {
-        [DataMember(Name = "raw")]
-		public int raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-    }
 
-    [DataContract]
-	public class EarningsAverage
-    {
-        [DataMember(Name = "raw")]
-		public double raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-    }
-
-    [DataContract]
-	public class EarningsLow
-    {
-        [DataMember(Name = "raw")]
-		public double raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-    }
-
-    [DataContract]
-	public class EarningsHigh
-    {
-        [DataMember(Name = "raw")]
-		public double raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-    }
-
-    [DataContract]
-	public class RevenueAverage
-    {
-        [DataMember(Name = "raw")]
-		public long raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-        [DataMember(Name = "longFmt")]
-	public string longFmt { get; set; }
-    }
-
-    [DataContract]
-	public class RevenueLow
-    {
-        [DataMember(Name = "raw")]
-		public long raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-        [DataMember(Name = "longFmt")]
-	public string longFmt { get; set; }
-    }
-
-    [DataContract]
-	public class RevenueHigh
-    {
-        [DataMember(Name = "raw")]
-		public long raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-        [DataMember(Name = "longFmt")]
-	public string longFmt { get; set; }
-    }
-
-    [DataContract]
-	public class Earnings
-    {
-        [DataMember(Name = "earningsDate")]
-		public List<EarningsDate> earningsDate { get; set; }
-        [DataMember(Name = "earningsAverage")]
-		public EarningsAverage earningsAverage { get; set; }
-        [DataMember(Name = "earningsLow")]
-		public EarningsLow earningsLow { get; set; }
-        [DataMember(Name = "earningsHigh")]
-		public EarningsHigh earningsHigh { get; set; }
-        [DataMember(Name = "revenueAverage")]
-		public RevenueAverage revenueAverage { get; set; }
-        [DataMember(Name = "revenueLow")]
-		public RevenueLow revenueLow { get; set; }
-        [DataMember(Name = "revenueHigh")]
-		public RevenueHigh revenueHigh { get; set; }
-    }
-
-    [DataContract]
-	public class ExDividendDate
-    {
-        [DataMember(Name = "raw")]
-		public int raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-    }
-
-    [DataContract]
-	public class DividendDate
-    {
-        [DataMember(Name = "raw")]
-		public int raw { get; set; }
-        [DataMember(Name = "fmt")]
-        public string fmt { get; set; }
-    }
-
-    [DataContract]
-	public class CalendarEvents
-    {
-        [DataMember(Name = "maxAge")]
-		public int maxAge { get; set; }
-        [DataMember(Name = "earnings")]
-		public Earnings earnings { get; set; }
-        [DataMember(Name = "exDividendDate")]
-		public ExDividendDate exDividendDate { get; set; }
-        [DataMember(Name = "dividendDate")]
-		public DividendDate dividendDate { get; set; }
-    }
 
     [DataContract]
 	public class CurrentPrice
@@ -872,14 +755,29 @@ namespace GetStockStats
     }
 
     [DataContract]
-	public class YStats
+	public class Result
     {
         [DataMember(Name = "defaultKeyStatistics")]
 		public DefaultKeyStatistics defaultKeyStatistics { get; set; }
-        [DataMember(Name = "calendarEvents")]
-		public CalendarEvents calendarEvents { get; set; }
         [DataMember(Name = "financialData")]
 		public FinancialData financialData { get; set; }
     }
+
+    [DataContract]
+    public class QuoteSummary
+    {
+        [DataMember(Name = "result")]
+        public List<Result> result { get; set; }
+        [DataMember(Name = "error")]
+        public object error { get; set; }
+    }
+
+    [DataContract]
+    public class YStats
+    {
+        [DataMember(Name = "quoteSummary")]
+        public QuoteSummary quoteSummary { get; set; }
+    }
+
 
 }

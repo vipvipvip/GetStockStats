@@ -13,7 +13,7 @@ namespace GetStockStats
         static void Main(string[] args)
         {
             string ticker = "AAPL";
-            if ( args[0].Length > 0)
+            if ( args.Length > 0)
             {
                 ticker = args[0];
             }

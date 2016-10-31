@@ -14,19 +14,19 @@ namespace GetStockStats.Models
     class Tickers : BaseRepository
     {
         [DataMember]
-        public int db_ticker_id;
+        public int db_ticker_id { get; set; }
 
         [DataMember]
-        public string db_strTicker = "";
+        public string db_strTicker { get; set; } = "";
 
         [DataMember]
-        public int? db_type;
+        public int? db_type { get; set; }
 
         [DataMember]
-        public DateTime? db_inactive_dt;
+        public DateTime? db_inactive_dt { get; set; }
 
         [DataMember]
-        public DateTime? db_addition_dt;
+        public DateTime? db_addition_dt { get; set; }
 
         public string GetJson()
         {

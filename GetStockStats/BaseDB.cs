@@ -5,16 +5,20 @@ using System.Configuration;
 namespace GetStockStats
 {
     public class BaseRepository
+    {
+        protected static IDbConnection OpenConnection(string dbName)
         {
-            protected static IDbConnection OpenConnection(string dbName)
-            {
-                var cfg = ConfigurationManager.ConnectionStrings["DBConnection"];
-                var connection = new SqlConnection(cfg.ConnectionString);
-                connection.ConnectionString = cfg.ConnectionString + dbName;
-                connection.Open();
+            string conStr = GetConnectionString(dbName);
+            var connection = new SqlConnection(conStr);
+            connection.Open();
 
-                return connection;
-            }
+            return connection;
         }
 
+        public static string GetConnectionString(string dbName)
+        {
+            var cfg = ConfigurationManager.ConnectionStrings["DBConnection"];
+            return cfg.ConnectionString + dbName;
+        }
+    }
 }

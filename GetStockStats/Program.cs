@@ -16,7 +16,7 @@ namespace GetStockStats
 
         static void Main(string[] args)
         {
-            string ticker = "AAPL";
+            string ticker = "";
             if ( args.Length > 0)
             {
                 ticker = args[0];
@@ -26,14 +26,22 @@ namespace GetStockStats
             //yqAPI.DumpData(yq);
 
             YStatsAPI ysAPI = new YStatsAPI();
-            YStats ys = ysAPI.GetData(ticker);
+            //YStats ys = ysAPI.GetData(ticker);
             //ysAPI.DumpData(ys);
-            doCalc(ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw,
-                ys.quoteSummary.result[0].financialData.totalRevenue.raw,
-                ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw);
+            //doCalc(ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw,
+            //    ys.quoteSummary.result[0].financialData.totalRevenue.raw,
+            //    ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw);
 
+            YStats ys;
+            List<Tickers> tickers;
             Tickers clsTicker = new Tickers();
-            List<Tickers> tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_ticker_id in (select db_ticker_id from tbl_Portfolios where db_portfolio_name = 'IVV')");
+            if (ticker == "")
+            {
+                tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_ticker_id in (select db_ticker_id from tbl_Portfolios where db_portfolio_name = 'IVV')");
+            } else
+            {
+                tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_strTicker = '" + ticker + "'");
+            }
             Stats clsStats = new Stats();
             List<Stats> stats = clsStats.Get("SELECT * from tbl_Stats");
 

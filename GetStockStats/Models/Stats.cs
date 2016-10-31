@@ -25,7 +25,7 @@ namespace GetStockStats.Models
         public double? db_net_income { get; set; }
 
         [DataMember]
-        public long? db_share_outstanding { get; set; }
+        public double? db_share_outstanding { get; set; }
 
         [DataMember]
         public double? db_current_price { get; set; }

@@ -451,7 +451,7 @@ namespace GetStockStats
 	public class TargetHighPrice
     {
         [DataMember(Name = "raw")]
-		public int raw { get; set; }
+        public double raw { get; set; }
         [DataMember(Name = "fmt")]
         public string fmt { get; set; }
     }
@@ -460,7 +460,7 @@ namespace GetStockStats
 	public class TargetLowPrice
     {
         [DataMember(Name = "raw")]
-		public int raw { get; set; }
+        public double raw { get; set; }
         [DataMember(Name = "fmt")]
         public string fmt { get; set; }
     }
@@ -478,7 +478,7 @@ namespace GetStockStats
 	public class TargetMedianPrice
     {
         [DataMember(Name = "raw")]
-		public int raw { get; set; }
+        public double raw { get; set; }
         [DataMember(Name = "fmt")]
         public string fmt { get; set; }
     }

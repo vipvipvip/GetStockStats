@@ -53,22 +53,30 @@ namespace GetStockStats.Models
             //SQL DB Access
             string query = "";
             using (IDbConnection connection = OpenConnection("StockDB"))
-            { 
-                    query ="INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding) " +
-                          "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding)";
+            {
+                query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding) " +
+                      "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding)";
 
                 connection.Execute(query, sData);
-            //using (IDbCommand command = IDbCommand(
-            //    "INSERT INTO tbl_Stats VALUES(@tickID, @NetIncome, @Revenue, @Shares)", connection))
-            //{
-            //    command.Parameters.Add(new SqlParameter("tickID", db_ticker_id));
-            //    command.Parameters.Add(new SqlParameter("NetIncome", netIncomeToCommon));
-            //    command.Parameters.Add(new SqlParameter("Revenue", totalRevenue));
-            //    command.Parameters.Add(new SqlParameter("Shares", sharesOutstanding));
-            //    command.ExecuteNonQuery();
-            //};
             }
 
+        }
+        public int Update(Stats sData)
+        {
+            if (sData.db_net_income <= 0 & sData.db_revenue <= 0) {
+                // delete this ticker from Stats
+                return 0;
+            }
+            //SQL DB Access
+            string query = "";
+            using (IDbConnection connection = OpenConnection("StockDB"))
+            {
+                query = "Update tbl_Stats set db_revenue=@db_revenue, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding where db_ticker_id = @db_ticker_id ";
+
+                var count = connection.Execute(query, sData);
+                return count;
+
+            }
         }
     }
 }

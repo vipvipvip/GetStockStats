@@ -43,8 +43,16 @@ namespace GetStockStats
                 ys = ysAPI.GetData(tickers.ElementAt(i).db_strTicker);
                 if (stats.Exists(x => x.db_ticker_id == tickers.ElementAt(i).db_ticker_id)) {
                     // update
+                    Stats s = new Stats();
+                    s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
+                    s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
+                    s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
+                    s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
 
-                } else
+                    clsStats.Update(s);
+
+                }
+                else
                 {
                     // insert
                     try

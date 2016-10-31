@@ -33,7 +33,7 @@ namespace GetStockStats
                 ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw);
 
             Tickers clsTicker = new Tickers();
-            List<Tickers> tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_strTicker like 'A%'");
+            List<Tickers> tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_ticker_id in (select db_ticker_id from tbl_Portfolios where db_portfolio_name = 'IVV')");
             Stats clsStats = new Stats();
             List<Stats> stats = clsStats.Get("SELECT * from tbl_Stats");
 
@@ -43,14 +43,20 @@ namespace GetStockStats
                 ys = ysAPI.GetData(tickers.ElementAt(i).db_strTicker);
                 if (stats.Exists(x => x.db_ticker_id == tickers.ElementAt(i).db_ticker_id)) {
                     // update
-                    Stats s = new Stats();
-                    s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
-                    s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
-                    s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
-                    s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
+                    try
+                    {
+                        Stats s = new Stats();
+                        s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
+                        s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
+                        s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
+                        s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
+                        s.db_current_price = ys.quoteSummary.result[0].financialData.currentPrice.raw;
+                        clsStats.Update(s);
+                    }
+                    catch(Exception e)
+                    {
 
-                    clsStats.Update(s);
-
+                    }
                 }
                 else
                 {
@@ -62,10 +68,11 @@ namespace GetStockStats
                         s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
                         s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
                         s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
+                        s.db_current_price = ys.quoteSummary.result[0].financialData.currentPrice.raw;
 
                         clsStats.Insert(s);
                     }
-                    catch( Exception e)
+                    catch (Exception e)
                     {
 
                     }

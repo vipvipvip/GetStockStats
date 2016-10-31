@@ -21,16 +21,10 @@ namespace GetStockStats
             {
                 ticker = args[0];
             }
-            //YQuoteAPI yqAPI = new YQuoteAPI();
-            //YahooQuote yq = yqAPI.GetData("AAPL");
-            //yqAPI.DumpData(yq);
+            YQuoteAPI yqAPI = new YQuoteAPI();
+            YahooQuote yq;
 
             YStatsAPI ysAPI = new YStatsAPI();
-            //YStats ys = ysAPI.GetData(ticker);
-            //ysAPI.DumpData(ys);
-            //doCalc(ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw,
-            //    ys.quoteSummary.result[0].financialData.totalRevenue.raw,
-            //    ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw);
 
             YStats ys;
             List<Tickers> tickers;
@@ -56,6 +50,7 @@ namespace GetStockStats
                         Stats s = new Stats();
                         s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
                         s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
+                        s.db_ebitda = ys.quoteSummary.result[0].financialData.ebitda.raw;
                         s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
                         s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
                         s.db_current_price = ys.quoteSummary.result[0].financialData.currentPrice.raw;
@@ -74,6 +69,7 @@ namespace GetStockStats
                         Stats s = new Stats();
                         s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
                         s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
+                        s.db_ebitda = ys.quoteSummary.result[0].financialData.ebitda.raw;
                         s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
                         s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
                         s.db_current_price = ys.quoteSummary.result[0].financialData.currentPrice.raw;
@@ -105,36 +101,6 @@ namespace GetStockStats
             Console.WriteLine("NI: {0}", ni);
             Console.WriteLine("Revenue: {0}", rev);
             Console.WriteLine("Shares: {0}", shares);
-        }
-
-        static void InsertStats()
-        {
-            //SQL DB Access
-            int n = 0;
-            using (IDbConnection connection = OpenConnection("StockDB"))
-            {
-                StringBuilder query = new StringBuilder();
-                // Dapper maps by column names. So create class with identical member names as the columns in select
-                query.Append("SELECT db_strTicker, db_addition_dt from tbl_Ticker where db_strTicker like 'Z%'");
-
-                //IEnumerable<Tickers> tickers =  connection.Query<Tickers>(query);
-                var tickers = connection.QueryMultiple(query.ToString());
-                var ZTickers = tickers.Read<Tickers>().ToList();
-
-                for (int i = 0; i < 10; i++)
-                {
-                    Console.Write("\r\n" + ZTickers.ElementAt<Tickers>(i).db_strTicker);
-                }
-
-                foreach (Tickers tick in ZTickers)
-                {
-                    n++;
-                    Console.Write("\r\n" + tick.GetJson());
-                }
-            }
-
-            Console.Write("\r\nTick Count: " + n);
-
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using GetStockStats.Models;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,20 @@ namespace GetStockStats
                 ys.quoteSummary.result[0].financialData.totalRevenue.raw,
                 ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw);
 
-            InsertStats();
+            Tickers clsTicker = new Tickers();
+            List<Tickers> tickers = clsTicker.Get("SELECT db_strTicker, db_addition_dt from tbl_Ticker where db_strTicker like 'Z%'");
+            for (int i = 0; i < tickers.Count(); i++)
+            {
+                Console.Write("\r\n" + tickers.ElementAt<Tickers>(i).db_strTicker);
+            }
+
+            Stats clsStats = new Stats();
+            List<Stats> stats = clsStats.Get("SELECT * from tbl_Stats");
+            for (int i = 0; i < stats.Count(); i++)
+            {
+                Console.Write("\r\n" + stats.ElementAt(i).db_ticker_id);
+            }
+
             Console.ReadKey();
         }
 
@@ -51,7 +65,7 @@ namespace GetStockStats
             {
                 StringBuilder query = new StringBuilder();
                 // Dapper maps by column names. So create class with identical member names as the columns in select
-                query.Append("SELECT * from tbl_Ticker where db_strTicker like 'Z%'");
+                query.Append("SELECT db_strTicker, db_addition_dt from tbl_Ticker where db_strTicker like 'Z%'");
 
                 //IEnumerable<Tickers> tickers =  connection.Query<Tickers>(query);
                 var tickers = connection.QueryMultiple(query.ToString());

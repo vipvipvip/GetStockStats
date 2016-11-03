@@ -1,10 +1,7 @@
-﻿using Dapper;
-using GetStockStats.Models;
+﻿using GetStockStats.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
 
 
 namespace GetStockStats
@@ -43,17 +40,25 @@ namespace GetStockStats
             for (int i = 0; i < tickers.Count(); i++)
             {
                 ys = ysAPI.GetData(tickers.ElementAt(i).db_strTicker);
+                Stats s = new Stats();
+                try
+                {
+                    s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
+                    s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
+                    s.db_ebitda = ys.quoteSummary.result[0].financialData.ebitda.raw;
+                    s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
+                    s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
+                    s.db_current_price = ys.quoteSummary.result[0].financialData.currentPrice.raw;
+                }
+                catch (Exception e)
+                {
+                    continue;
+                }
+
                 if (stats.Exists(x => x.db_ticker_id == tickers.ElementAt(i).db_ticker_id)) {
                     // update
                     try
                     {
-                        Stats s = new Stats();
-                        s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
-                        s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
-                        s.db_ebitda = ys.quoteSummary.result[0].financialData.ebitda.raw;
-                        s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
-                        s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
-                        s.db_current_price = ys.quoteSummary.result[0].financialData.currentPrice.raw;
                         clsStats.Update(s);
                     }
                     catch(Exception e)
@@ -66,14 +71,6 @@ namespace GetStockStats
                     // insert
                     try
                     {
-                        Stats s = new Stats();
-                        s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
-                        s.db_net_income = ys.quoteSummary.result[0].defaultKeyStatistics.netIncomeToCommon.raw;
-                        s.db_ebitda = ys.quoteSummary.result[0].financialData.ebitda.raw;
-                        s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
-                        s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
-                        s.db_current_price = ys.quoteSummary.result[0].financialData.currentPrice.raw;
-
                         clsStats.Insert(s);
                     }
                     catch (Exception e)

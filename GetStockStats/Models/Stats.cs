@@ -55,6 +55,7 @@ namespace GetStockStats.Models
             if (sData.db_net_income <= 0) return;
             if (sData.db_revenue <= 0) return;
             if (sData.db_ebitda <= 0) return;
+            if (sData.db_share_outstanding <= 0) return;
 
             //SQL DB Access
             string query = "";

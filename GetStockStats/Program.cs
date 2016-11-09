@@ -29,7 +29,7 @@ namespace GetStockStats
             if (ticker == "")
             {
                 //tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_ticker_id in (select db_ticker_id from tbl_Portfolios where db_portfolio_name = 'IVV')");
-                tickers = clsTicker.Get("select * from tbl_Portfolios where db_portfolio_name = 'ALL'");
+                tickers = clsTicker.Get("select * from tbl_Portfolios where db_portfolio_name = 'IVV'");
             } else
             {
                 tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_strTicker = '" + ticker + "'");
@@ -42,6 +42,7 @@ namespace GetStockStats
             {
                 ys = ysAPI.GetData(tickers.ElementAt(i).db_strTicker);
                 Stats s = new Stats();
+                s.db_updated = DateTime.Today;
                 try
                 {
                     s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;

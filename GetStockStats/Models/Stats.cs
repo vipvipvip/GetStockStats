@@ -79,7 +79,7 @@ namespace GetStockStats.Models
             string query = "";
             using (IDbConnection connection = OpenConnection("StockDB"))
             {
-                query = "Update tbl_Stats set db_revenue=@db_revenue, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda where db_ticker_id = @db_ticker_id ";
+                query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda where db_ticker_id = @db_ticker_id ";
 
                 var count = connection.Execute(query, sData);
                 return count;

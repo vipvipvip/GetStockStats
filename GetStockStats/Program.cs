@@ -17,7 +17,7 @@ namespace GetStockStats
             string pattern = @"^(\w+)[=](\w+)$";
 
             // default sql in case no args are provided
-            string sql = "select* from tbl_Portfolios where db_portfolio_name = 'IVV'";
+            string sql = "select* from tbl_Portfolios where db_portfolio_name = 'IVV' order by db_strTicker";
             foreach (var expression in args)
                 foreach (Match m in Regex.Matches(expression, pattern))
                 {
@@ -27,7 +27,7 @@ namespace GetStockStats
                     switch ( key.ToUpper())
                     {
                         case "P":
-                            sql = string.Format("select * from tbl_Portfolios where db_portfolio_name = '{0}'", value);
+                            sql = string.Format("select * from tbl_Portfolios where db_portfolio_name = '{0}'  order by db_strTicker", value);
                             Console.WriteLine(sql);
                             break;
                         case "T":
@@ -49,7 +49,6 @@ namespace GetStockStats
             List<Tickers> tickers;
             Tickers clsTicker = new Tickers();
             tickers = clsTicker.Get(sql);
-            return;
 
             Stats clsStats = new Stats();
             List<Stats> stats = clsStats.Get("SELECT * from tbl_Stats");

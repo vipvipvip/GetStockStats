@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Text.RegularExpressions;
 
 namespace GetStockStats
 {
@@ -13,11 +13,33 @@ namespace GetStockStats
 
         static void Main(string[] args)
         {
-            string ticker = "";
-            if ( args.Length > 0)
-            {
-                ticker = args[0];
-            }
+            // looking for args like P=IVV T=AAPL
+            string pattern = @"^(\w+)[=](\w+)$";
+
+            // default sql in case no args are provided
+            string sql = "select* from tbl_Portfolios where db_portfolio_name = 'IVV'";
+            foreach (var expression in args)
+                foreach (Match m in Regex.Matches(expression, pattern))
+                {
+                    string key = m.Groups[1].Value;
+                    string value = m.Groups[2].Value;
+                    Console.WriteLine("{0}  {1}", key, value);
+                    switch ( key.ToUpper())
+                    {
+                        case "P":
+                            sql = string.Format("select * from tbl_Portfolios where db_portfolio_name = '{0}'", value);
+                            Console.WriteLine(sql);
+                            break;
+                        case "T":
+                            sql = string.Format("select * from tbl_Ticker where db_strTicker = '{0}'", value);
+                            Console.WriteLine(sql);
+                            break;
+
+                        default:
+                            //Console.WriteLine("invalid arg");
+                            break;
+                    }
+                }
             YQuoteAPI yqAPI = new YQuoteAPI();
             YahooQuote yq;
 
@@ -26,14 +48,9 @@ namespace GetStockStats
             YStats ys;
             List<Tickers> tickers;
             Tickers clsTicker = new Tickers();
-            if (ticker == "")
-            {
-                //tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_ticker_id in (select db_ticker_id from tbl_Portfolios where db_portfolio_name = 'IVV')");
-                tickers = clsTicker.Get("select * from tbl_Portfolios where db_portfolio_name = 'IVV'");
-            } else
-            {
-                tickers = clsTicker.Get("SELECT db_ticker_id, db_strTicker, db_addition_dt from tbl_Ticker where db_strTicker = '" + ticker + "'");
-            }
+            tickers = clsTicker.Get(sql);
+            return;
+
             Stats clsStats = new Stats();
             List<Stats> stats = clsStats.Get("SELECT * from tbl_Stats");
 

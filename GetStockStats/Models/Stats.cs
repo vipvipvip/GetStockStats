@@ -19,19 +19,28 @@ namespace GetStockStats.Models
         public DateTime db_updated { get; set; }
 
         [DataMember]
-        public double? db_revenue { get; set; }
+        public decimal? db_revenue { get; set; }
 
         [DataMember]
-        public double? db_net_income { get; set; }
+        public decimal? db_net_income { get; set; }
 
         [DataMember]
         public long? db_share_outstanding { get; set; }
 
         [DataMember]
-        public double? db_current_price { get; set; }
+        public decimal? db_current_price { get; set; }
 
         [DataMember]
-        public double? db_ebitda { get; set; }
+        public decimal? db_ebitda { get; set; }
+
+        [DataMember]
+        public decimal? db_MA50 { get; set; }
+
+        [DataMember]
+        public decimal? db_MA200 { get; set; }
+
+        [DataMember]
+        public decimal? db_PEGRatio { get; set; }
 
 
         public List<Stats> Get(string sql)
@@ -61,8 +70,8 @@ namespace GetStockStats.Models
             string query = "";
             using (IDbConnection connection = OpenConnection("StockDB"))
             {
-                query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding, db_current_price, db_ebitda) " +
-                      "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding, @db_current_price, @db_ebitda)";
+                query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding, db_current_price, db_ebitda, db_MA50, db_MA200, db_PEGRatio) " +
+                      "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding, @db_current_price, @db_ebitda, @db_MA50, @db_MA200, @db_PEGRatio)";
 
                 connection.Execute(query, sData);
             }
@@ -70,7 +79,7 @@ namespace GetStockStats.Models
         }
         public int Update(Stats sData)
         {
-            if (sData.db_net_income <= 0 & sData.db_revenue <= 0 & sData.db_share_outstanding <= 0 & sData.db_ebitda <= 0) {
+            if (sData.db_net_income <= 0 || sData.db_revenue <= 0 || sData.db_share_outstanding <= 0 || sData.db_ebitda <= 0) {
                 // delete this ticker from Stats
                 Delete(sData);
                 return 0;
@@ -79,7 +88,7 @@ namespace GetStockStats.Models
             string query = "";
             using (IDbConnection connection = OpenConnection("StockDB"))
             {
-                query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda where db_ticker_id = @db_ticker_id ";
+                query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda, db_MA50=@db_MA50, db_MA200=@db_MA200, db_PEGRatio=@db_PEGRatio where db_ticker_id = @db_ticker_id ";
 
                 var count = connection.Execute(query, sData);
                 return count;

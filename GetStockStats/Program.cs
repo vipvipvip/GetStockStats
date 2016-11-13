@@ -57,6 +57,7 @@ namespace GetStockStats
             for (int i = 0; i < tickers.Count(); i++)
             {
                 ys = ysAPI.GetData(tickers.ElementAt(i).db_strTicker);
+                yq = yqAPI.GetData(tickers.ElementAt(i).db_strTicker);
                 Stats s = new Stats();
                 s.db_updated = DateTime.Today;
                 try
@@ -66,7 +67,11 @@ namespace GetStockStats
                     s.db_ebitda = ys.quoteSummary.result[0].financialData.ebitda.raw;
                     s.db_revenue = ys.quoteSummary.result[0].financialData.totalRevenue.raw;
                     s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
-                    s.db_current_price = ys.quoteSummary.result[0].financialData.currentPrice.raw;
+                    s.db_current_price = System.Convert.ToDecimal(ys.quoteSummary.result[0].financialData.currentPrice.raw);
+                    s.db_MA50 = System.Convert.ToDecimal(yq.quote.FiftydayMovingAverage);
+                    s.db_MA200 = System.Convert.ToDecimal(yq.quote.TwoHundreddayMovingAverage);
+                    s.db_PEGRatio = System.Convert.ToDecimal(yq.quote.PEGRatio);
+
                 }
                 catch (Exception e)
                 {
@@ -79,10 +84,7 @@ namespace GetStockStats
                     {
                         clsStats.Update(s);
                     }
-                    catch(Exception e)
-                    {
-
-                    }
+                    catch (Exception e) { }
                 }
                 else
                 {
@@ -91,22 +93,10 @@ namespace GetStockStats
                     {
                         clsStats.Insert(s);
                     }
-                    catch (Exception e)
-                    {
-
-                    }
+                    catch (Exception e) { }
                 }
-
-//                Console.Write("\r\n" + tickers.ElementAt<Tickers>(i).db_strTicker);
             }
-
-            Console.WriteLine("Apple Exists? {0}",  tickers.Exists(x => x.db_strTicker == "AAPL"));
-
-            for (int i = 0; i < stats.Count(); i++)
-            {
-                Console.Write("\r\n" + stats.ElementAt(i).db_ticker_id);
-            }
-
+            Console.WriteLine("Press any key to continue..");
             Console.ReadKey();
         }
 

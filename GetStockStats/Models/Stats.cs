@@ -54,6 +54,9 @@ namespace GetStockStats.Models
     [DataMember]
     public decimal? db_DividendYield { get; set; }
 
+    [DataMember]
+    public decimal? db_EPS { get; set; }
+
     public List<Stats> Get(string sql)
     {
       //SQL DB Access
@@ -78,13 +81,14 @@ namespace GetStockStats.Models
         if (sData.db_revenue <= 0) return;
         if (sData.db_ebitda <= 0) return;
         if (sData.db_share_outstanding <= 0) return;
+        if (sData.db_EPS <= 0) return;
       }
       //SQL DB Access
       string query = "";
       using (IDbConnection connection = OpenConnection("StockDB"))
       {
-        query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding, db_current_price, db_ebitda, db_MA50, db_MA200, db_PEGRatio,db_DividendYield) " +
-              "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding, @db_current_price, @db_ebitda, @db_MA50, @db_MA200, @db_PEGRatio,@db_DividendYield)";
+        query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding, db_current_price, db_ebitda, db_MA50, db_MA200, db_PEGRatio,db_DividendYield, db_EPS) " +
+              "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding, @db_current_price, @db_ebitda, @db_MA50, @db_MA200, @db_PEGRatio,@db_DividendYield, @db_EPS)";
 
         connection.Execute(query, sData);
       }
@@ -92,7 +96,7 @@ namespace GetStockStats.Models
     }
     public int Update(Stats sData)
     {
-      if ( sData.equity_type == EQUITY_TYPE.STOCKS & (sData.db_net_income <= 0 || sData.db_revenue <= 0 || sData.db_share_outstanding <= 0 || sData.db_ebitda <= 0))
+      if ( sData.equity_type == EQUITY_TYPE.STOCKS & (sData.db_net_income <= 0 || sData.db_revenue <= 0 || sData.db_share_outstanding <= 0 || sData.db_ebitda <= 0 || sData.db_EPS <= 0))
       {
         // delete this ticker from Stats
         Delete(sData);
@@ -102,7 +106,7 @@ namespace GetStockStats.Models
       string query = "";
       using (IDbConnection connection = OpenConnection("StockDB"))
       {
-        query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda, db_MA50=@db_MA50, db_MA200=@db_MA200, db_PEGRatio=@db_PEGRatio, db_DividendYield=@db_DividendYield where db_ticker_id = @db_ticker_id ";
+        query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda, db_MA50=@db_MA50, db_MA200=@db_MA200, db_PEGRatio=@db_PEGRatio, db_DividendYield=@db_DividendYield, db_EPS=@db_EPS where db_ticker_id = @db_ticker_id ";
 
         var count = connection.Execute(query, sData);
         return count;

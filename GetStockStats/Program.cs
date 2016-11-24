@@ -55,13 +55,18 @@ namespace GetStockStats
 
       for (int i = 0; i < tickers.Count(); i++)
       {
-        Console.WriteLine("Processing {0}", tickers.ElementAt(i).db_strTicker);
-        ys = ysAPI.GetData(tickers.ElementAt(i).db_strTicker);
-        yq = yqAPI.GetData(tickers.ElementAt(i).db_strTicker);
         Stats s = new Stats();
         s.db_updated = DateTime.Today;
+        if (stats.Exists(x => x.db_ticker_id == tickers.ElementAt(i).db_ticker_id & x.db_updated == s.db_updated)) {
+          Console.WriteLine("Ticker {0} - already processed", tickers.ElementAt(i).db_strTicker);
+          continue;
+        }
+        Console.WriteLine("Ticker {0} - processing.", tickers.ElementAt(i).db_strTicker);
+        ys = ysAPI.GetData(tickers.ElementAt(i).db_strTicker);
+        yq = yqAPI.GetData(tickers.ElementAt(i).db_strTicker);
+
         try
-        {
+          {
           s.equity_type = (EQUITY_TYPE)Enum.ToObject(typeof(EQUITY_TYPE), tickers.ElementAt(i).db_type);
           s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
           s.db_current_price = Convert.ToDecimal(yq.quote.LastTradePriceOnly);
@@ -76,6 +81,7 @@ namespace GetStockStats
             s.db_share_outstanding = ys.quoteSummary.result[0].defaultKeyStatistics.sharesOutstanding.raw;
             s.db_PEGRatio = Convert.ToDecimal(yq.quote.PEGRatio);
             s.db_DividendYield = Convert.ToDecimal(yq.quote.DividendYield);
+            s.db_EPS = Convert.ToDecimal(ys.quoteSummary.result[0].defaultKeyStatistics.forwardEps.raw);
           }
 
         }

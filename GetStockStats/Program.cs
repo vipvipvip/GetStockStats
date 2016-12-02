@@ -10,6 +10,12 @@ namespace GetStockStats
   {
     static void Main(string[] args)
     {
+      if (args.Length <= 0) {
+        Console.WriteLine("=================");
+        Console.WriteLine("GetStockStats P=<portfolio name> || T=<ticker> || TYPE=<1,2,3>");
+        Console.WriteLine("=================");
+        return;
+      }
       // looking for args like P=IVV T=AAPL
       string pattern = @"^(\w+)[=](\w+)$";
 
@@ -33,7 +39,9 @@ namespace GetStockStats
               sql = string.Format("select * from tbl_Ticker where db_strTicker = '{0}'", value);
               Console.WriteLine(sql);
               break;
-
+            case "TYPE":
+              sql = string.Format("select * from tbl_Ticker where db_type = '{0}'", value);
+              break;
             default:
               //Console.WriteLine("invalid arg");
               break;
@@ -67,6 +75,7 @@ namespace GetStockStats
 
         try
           {
+          s.db_updated = Convert.ToDateTime(yq.quote.LastTradeDate);
           s.equity_type = (EQUITY_TYPE)Enum.ToObject(typeof(EQUITY_TYPE), tickers.ElementAt(i).db_type);
           s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;
           s.db_current_price = Convert.ToDecimal(yq.quote.LastTradePriceOnly);

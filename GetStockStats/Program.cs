@@ -40,7 +40,7 @@ namespace GetStockStats
               Console.WriteLine(sql);
               break;
             case "TYPE":
-              sql = string.Format("select * from tbl_Ticker where db_type = '{0}'", value);
+              sql = string.Format("select * from tbl_Ticker where db_type = '{0}'  order by db_strTicker", value);
               break;
             default:
               //Console.WriteLine("invalid arg");

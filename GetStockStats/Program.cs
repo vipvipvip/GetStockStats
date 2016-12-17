@@ -65,7 +65,7 @@ namespace GetStockStats
       {
         Stats s = new Stats();
         s.db_updated = DateTime.Today;
-        if (stats.Exists(x => x.db_ticker_id == tickers.ElementAt(i).db_ticker_id & x.db_updated == s.db_updated)) {
+        if (stats.Exists(x => x.db_ticker_id == tickers.ElementAt(i).db_ticker_id & x.db_updated.ToShortDateString() == s.db_updated.ToShortDateString())) {
           Console.WriteLine("Ticker {0} - already processed", tickers.ElementAt(i).db_strTicker);
           continue;
         }
@@ -75,6 +75,7 @@ namespace GetStockStats
 
         try
           {
+          s.db_strTicker = tickers.ElementAt(i).db_strTicker;
           s.db_updated = Convert.ToDateTime(yq.quote.LastTradeDate);
           s.equity_type = (EQUITY_TYPE)Enum.ToObject(typeof(EQUITY_TYPE), tickers.ElementAt(i).db_type);
           s.db_ticker_id = tickers.ElementAt(i).db_ticker_id;

@@ -22,6 +22,10 @@ namespace GetStockStats.Models
     public EQUITY_TYPE equity_type { get; set; }
 
     [DataMember]
+    public string db_strTicker { get; set; }
+
+
+    [DataMember]
     public long db_ticker_id { get; set; }
 
     [DataMember]
@@ -77,11 +81,13 @@ namespace GetStockStats.Models
     {
       if (sData.equity_type == EQUITY_TYPE.STOCKS)
       {
-        if (sData.db_net_income < 0) return;
-        if (sData.db_revenue < 0) return;
-        if (sData.db_share_outstanding < 0) return;
-        if (sData.db_EPS < 0) return;
+        if (sData.db_net_income < 0 && sData.db_revenue < 0 && sData.db_share_outstanding < 0 && sData.db_EPS < 0)
+        {
+          Delete(sData);
+          return;
+        }
       }
+
       //SQL DB Access
       string query = "";
       using (IDbConnection connection = OpenConnection("StockDB"))
@@ -95,7 +101,7 @@ namespace GetStockStats.Models
     }
     public int Update(Stats sData)
     {
-      if ( sData.equity_type == EQUITY_TYPE.STOCKS & (sData.db_net_income < 0 || sData.db_revenue < 0 || sData.db_share_outstanding < 0  || sData.db_EPS < 0))
+      if ( sData.equity_type == EQUITY_TYPE.STOCKS && (sData.db_net_income < 0 || sData.db_revenue < 0 || sData.db_share_outstanding < 0  || sData.db_EPS < 0))
       {
         // delete this ticker from Stats
         Delete(sData);
@@ -121,6 +127,8 @@ namespace GetStockStats.Models
         query = "delete from tbl_Stats where db_ticker_id = @db_ticker_id ";
 
         var count = connection.Execute(query, sData);
+        Console.WriteLine("Ticker {0}({1} - deleted.", sData.db_strTicker, sData.db_ticker_id);
+
         return count;
 
       }

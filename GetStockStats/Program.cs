@@ -97,6 +97,8 @@ namespace GetStockStats
         }
         catch (Exception e)
         {
+          Console.WriteLine("Exception processing {0}. It will be deleted.", tickers.ElementAt(i).db_strTicker);
+          clsStats.Delete(s);
           continue;
         }
 

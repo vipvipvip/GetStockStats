@@ -127,8 +127,12 @@ namespace GetStockStats.Models
         query = "delete from tbl_Stats where db_ticker_id = @db_ticker_id ";
 
         var count = connection.Execute(query, sData);
-        Console.WriteLine("Ticker {0}({1} - deleted.", sData.db_strTicker, sData.db_ticker_id);
-
+        if (count > 0) {
+          Console.WriteLine("Ticker {0}({1}) - deleted.", sData.db_strTicker, sData.db_ticker_id);
+        } else
+        {
+          Console.WriteLine("Ticker {0}({1}) - NOT deleted. Not in DB.", sData.db_strTicker, sData.db_ticker_id);
+        }
         return count;
 
       }

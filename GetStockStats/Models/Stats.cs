@@ -61,6 +61,17 @@ namespace GetStockStats.Models
     [DataMember]
     public decimal? db_EPS { get; set; }
 
+    [DataMember]
+    public decimal? db_DividendShare { get; set; }
+
+    [DataMember]
+    public decimal? db_BookValue { get; set; }
+
+    [DataMember]
+    public decimal? db_ProfitMargin { get; set; }
+
+
+
     public List<Stats> Get(string sql)
     {
       //SQL DB Access
@@ -92,8 +103,8 @@ namespace GetStockStats.Models
       string query = "";
       using (IDbConnection connection = OpenConnection("StockDB"))
       {
-        query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding, db_current_price, db_ebitda, db_MA50, db_MA200, db_PEGRatio,db_DividendYield, db_EPS) " +
-              "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding, @db_current_price, @db_ebitda, @db_MA50, @db_MA200, @db_PEGRatio,@db_DividendYield, @db_EPS)";
+        query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding, db_current_price, db_ebitda, db_MA50, db_MA200, db_PEGRatio,db_DividendYield, db_EPS, db_DividendShare, db_BookValue, db_ProfitMargin) " +
+              "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding, @db_current_price, @db_ebitda, @db_MA50, @db_MA200, @db_PEGRatio,@db_DividendYield, @db_EPS, @db_DividendShare, @db_BookValue, @db_ProfitMargin)";
 
         connection.Execute(query, sData);
       }
@@ -111,7 +122,7 @@ namespace GetStockStats.Models
       string query = "";
       using (IDbConnection connection = OpenConnection("StockDB"))
       {
-        query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda, db_MA50=@db_MA50, db_MA200=@db_MA200, db_PEGRatio=@db_PEGRatio, db_DividendYield=@db_DividendYield, db_EPS=@db_EPS where db_ticker_id = @db_ticker_id ";
+        query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda, db_MA50=@db_MA50, db_MA200=@db_MA200, db_PEGRatio=@db_PEGRatio, db_DividendYield=@db_DividendYield, db_EPS=@db_EPS, db_DividendShare=@db_DividendShare, db_BookValue=@db_BookValue, db_ProfitMargin=@db_ProfitMargin where db_ticker_id = @db_ticker_id ";
 
         var count = connection.Execute(query, sData);
         return count;

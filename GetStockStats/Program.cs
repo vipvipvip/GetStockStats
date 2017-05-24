@@ -92,6 +92,9 @@ namespace GetStockStats
             s.db_PEGRatio = Convert.ToDecimal(yq.quote.PEGRatio);
             s.db_DividendYield = Convert.ToDecimal(yq.quote.DividendYield);
             s.db_EPS = Convert.ToDecimal(ys.quoteSummary.result[0].defaultKeyStatistics.forwardEps.raw);
+            s.db_BookValue = Convert.ToDecimal(ys.quoteSummary.result[0].defaultKeyStatistics.bookValue.raw);
+            s.db_ProfitMargin = Convert.ToDecimal(ys.quoteSummary.result[0].defaultKeyStatistics.profitMargins.raw);
+            s.db_DividendShare = Convert.ToDecimal(yq.quote.DividendShare);
           }
 
         }

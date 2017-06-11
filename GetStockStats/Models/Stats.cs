@@ -70,6 +70,8 @@ namespace GetStockStats.Models
     [DataMember]
     public decimal? db_ProfitMargin { get; set; }
 
+    [DataMember]
+    public decimal? db_RevGrowth { get; set; }
 
 
     public List<Stats> Get(string sql)
@@ -103,8 +105,8 @@ namespace GetStockStats.Models
       string query = "";
       using (IDbConnection connection = OpenConnection("StockDB"))
       {
-        query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding, db_current_price, db_ebitda, db_MA50, db_MA200, db_PEGRatio,db_DividendYield, db_EPS, db_DividendShare, db_BookValue, db_ProfitMargin) " +
-              "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding, @db_current_price, @db_ebitda, @db_MA50, @db_MA200, @db_PEGRatio,@db_DividendYield, @db_EPS, @db_DividendShare, @db_BookValue, @db_ProfitMargin)";
+        query = "INSERT INTO tbl_Stats(db_ticker_id, db_revenue, db_net_income, db_share_outstanding, db_current_price, db_ebitda, db_MA50, db_MA200, db_PEGRatio,db_DividendYield, db_EPS, db_DividendShare, db_BookValue, db_ProfitMargin,db_RevGrowth) " +
+              "VALUES (@db_ticker_id, @db_revenue, @db_net_income,  @db_share_outstanding, @db_current_price, @db_ebitda, @db_MA50, @db_MA200, @db_PEGRatio,@db_DividendYield, @db_EPS, @db_DividendShare, @db_BookValue, @db_ProfitMargin, @db_RevGrowth)";
 
         connection.Execute(query, sData);
       }
@@ -122,7 +124,7 @@ namespace GetStockStats.Models
       string query = "";
       using (IDbConnection connection = OpenConnection("StockDB"))
       {
-        query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda, db_MA50=@db_MA50, db_MA200=@db_MA200, db_PEGRatio=@db_PEGRatio, db_DividendYield=@db_DividendYield, db_EPS=@db_EPS, db_DividendShare=@db_DividendShare, db_BookValue=@db_BookValue, db_ProfitMargin=@db_ProfitMargin where db_ticker_id = @db_ticker_id ";
+        query = "Update tbl_Stats set db_revenue=@db_revenue, db_updated=@db_updated, db_net_income=@db_net_income, db_share_outstanding=@db_share_outstanding, db_current_price=@db_current_price, db_ebitda=@db_ebitda, db_MA50=@db_MA50, db_MA200=@db_MA200, db_PEGRatio=@db_PEGRatio, db_DividendYield=@db_DividendYield, db_EPS=@db_EPS, db_DividendShare=@db_DividendShare, db_BookValue=@db_BookValue, db_ProfitMargin=@db_ProfitMargin, db_RevGrowth=@db_RevGrowth where db_ticker_id = @db_ticker_id ";
 
         var count = connection.Execute(query, sData);
         return count;
